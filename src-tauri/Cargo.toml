@@ -1,0 +1,62 @@
+[package]
+name = "captured-by-andy"
+version = "0.1.0"
+description = "Local-first photo culling and Instagram post planning"
+authors = ["Andy"]
+edition = "2021"
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary to make the lib name
+# unique and wouldn't conflict with the bin name (rust-lang/cargo#8519).
+name = "captured_by_andy_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6", features = [] }
+
+[dependencies]
+tauri = { version = "2.11", features = [] }
+tauri-plugin-dialog = "2.7"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rusqlite = { version = "0.40", features = ["bundled"] }
+rusqlite_migration = "2.6"
+walkdir = "2.5"
+blake3 = "1.8"
+uuid = { version = "1.26", features = ["v7"] }
+thumbhash = "0.1"
+crossbeam-channel = "0.5"
+thiserror = "2"
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+base64 = "0.22"
+plist = "1"
+xattr = "1"
+libc = "0.2"
+sha2 = "0.10"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2-core-foundation = "0.3"
+objc2-core-graphics = "0.3"
+objc2-image-io = "0.3"
+# To catch an Objective-C exception at the image protocol instead of aborting.
+objc2 = { version = "0.6", features = ["exception"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+# The disk is small: keep line numbers for backtraces but drop full debug info,
+# and none at all for dependencies. Roughly halves target/.
+[profile.dev]
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+# Function names stay in, so a crash report (and the app's log) says where it happened.
+strip = false
+debug = "line-tables-only"

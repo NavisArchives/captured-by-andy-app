@@ -1,0 +1,48 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Captured by Andy: never version private media or build output
+PROJECTS/
+prototypes/**/.wrangler/
+prototypes/**/node_modules/
+src-tauri/helpers/videoframe
+src-tauri/helpers/listen
+src-tauri/helpers/airdrop
+src-tauri/helpers/vision
+src-tauri/helpers/clip
+src-tauri/helpers/review
+*.partial
+.env
+.env.*
+src-tauri/helpers/webshot
+src-tauri/helpers/bin
+src-tauri/helpers/places
+
+# The web app's build
+dist-web
+
+# Colab notebook copies that carry Andy's clip list
+tools/cloud-previews/ready/
+tools/cloud-previews/__pycache__/

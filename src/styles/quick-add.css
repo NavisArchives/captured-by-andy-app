@@ -1,0 +1,60 @@
+/* Quick add: the filter sheet, then the Y / N screen (built on the cull's). */
+
+/* ---------------------------------------------------------- the sheet */
+.modal:has(.qa-setup) { width: min(680px, 100%); }
+.qa-setup { display: grid; gap: 18px; min-width: 0; }
+.qa-setup section { min-width: 0; }
+.qa-setup .eyebrow { margin: 0 0 8px; font-weight: 500; }
+.qa-trips { display: flex; flex-wrap: wrap; gap: 6px; max-height: 172px; overflow-y: auto; padding: 2px; }
+.qa-trips .chip { max-width: 100%; }
+.qa-trips .chip .n { font-family: var(--mono); font-size: 10.5px; opacity: 0.65; }
+.qa-trip-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.qa-dates { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px 14px; }
+.qa-dates label { display: grid; gap: 4px; flex: 1 1 180px; min-width: 0; }
+.qa-dates .link { margin-bottom: 12px; }
+.qa-note { margin: 6px 0 0; }
+.qa-row { display: flex; flex-wrap: wrap; gap: 16px 20px; }
+.qa-row .seg { width: fit-content; max-width: 100%; }
+.modal-foot .qa-count { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.modal-foot:has(.qa-count) { flex-wrap: wrap; }
+
+/* ---------------------------------------------------------- the screen */
+.quick-add .qa-title { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; letter-spacing: 0.1em; text-transform: uppercase; }
+.quick-add .qa-title b { color: var(--ink); font-weight: 600; }
+.quick-add .qa-progress { width: 220px; flex: 0 1 220px; min-width: 60px; }
+.quick-add .cull-top > * { flex-shrink: 0; }
+.quick-add .cull-top > .qa-title, .quick-add .cull-top > .qa-progress { flex-shrink: 1; }
+.quick-add .lbl.qa-in {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%); z-index: 1; display: inline-flex; align-items: center; gap: 6px;
+  font-size: 11px; padding: 6px 12px; background: var(--green); color: var(--on-green); max-width: calc(100% - 40px); overflow: hidden; text-overflow: ellipsis;
+}
+.quick-add .lbl.qa-in svg { width: 13px; height: 13px; flex: none; }
+.quick-add .cull-bar { flex-wrap: wrap; }
+.quick-add .qa-file { min-width: 0; flex: 1 1 160px; }
+.quick-add .qa-file .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.quick-add .cull-bar .spacer { flex: 0 0 0; }
+.quick-add .markbtn { flex: none; }
+.quick-add .qa-keys { white-space: nowrap; }
+@media (max-width: 900px) {
+  .quick-add .qa-keys { display: none; }
+}
+
+/* ---------------------------------------------------------- the tag picker */
+.tag-picker { position: relative; min-width: 0; }
+.tag-box { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 7px 9px; min-height: 46px; cursor: text; }
+.tag-box:focus-within { border-color: var(--green); background: var(--card); }
+.tag-box .chip { max-width: 100%; }
+.tag-box .chip .n { font-family: var(--mono); font-size: 10.5px; opacity: 0.65; }
+.tag-box .chip .x { cursor: pointer; }
+.tag-box input { flex: 1 1 120px; min-width: 0; border: 0; outline: none; background: none; color: var(--ink); font: inherit; font-size: 14px; padding: 4px; }
+.tag-list {
+  position: absolute; z-index: 5; top: calc(100% + 4px); left: 0; right: 0; margin: 0; padding: 4px; list-style: none;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-sm); box-shadow: 0 12px 32px rgb(0 0 0 / 0.35);
+  max-height: 222px; overflow-y: auto;
+}
+.tag-list li { display: flex; align-items: baseline; gap: 8px; padding: 7px 10px; border-radius: 6px; font-size: 13.5px; color: var(--ink); cursor: pointer; min-width: 0; }
+.tag-list li[aria-selected="true"] { background: color-mix(in srgb, var(--green) 22%, transparent); box-shadow: inset 2px 0 0 var(--green); }
+.tag-list .name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.tag-list .via { color: var(--muted); font-size: 12px; white-space: nowrap; }
+.tag-list .n { margin-left: auto; font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.tag-list .none { color: var(--muted); cursor: default; }

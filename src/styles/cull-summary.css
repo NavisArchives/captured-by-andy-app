@@ -1,0 +1,49 @@
+/* End-of-cull summary: a card over the stage, on the cull's night palette.
+   The photo stays faintly visible behind it. Night's --soft-2 row hover is
+   too close to --card to see, so rows hover on --soft here. */
+.cull-sum { position: absolute; inset: 0; z-index: 1; display: grid; place-items: center; padding: 20px; background: rgba(11, 16, 13, 0.7); }
+.cull-sum .card { width: min(540px, 100%); max-height: 100%; overflow-y: auto; border-color: var(--line); box-shadow: var(--shadow-lift); }
+.cull-sum h2 { margin: 0 0 14px; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.3; }
+.cull-sum h2 span { color: var(--muted); }
+.cull-sum button.row:hover { background: var(--soft); }
+.cull-sum button.row:disabled { background: none; }
+.cull-sum .row kbd { min-width: 34px; text-align: center; }
+.cull-sum .foot { margin: 12px 0 0; }
+
+/* Z: the photo at 100 %, dragged around. C: a burst's frames side by side. */
+.cull-zoom { position: absolute; inset: 0; z-index: 2; overflow: auto; background: var(--ground); cursor: grab; }
+.cull-zoom:active { cursor: grabbing; }
+.cull-zoom img { display: block; max-width: none; user-select: none; }
+.cull-zoom .zoom-note { position: fixed; left: 50%; transform: translateX(-50%); bottom: 150px; }
+.cull-compare { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; gap: 10px; padding: 16px; background: var(--ground); }
+.cull-compare .frames { flex: 1; min-height: 0; display: grid; gap: 10px; }
+.cull-compare .frame { position: relative; min-height: 0; padding: 0; border: 2px solid transparent; border-radius: 10px; background: none; overflow: hidden; cursor: pointer; }
+.cull-compare .frame.on { border-color: var(--green); }
+.cull-compare .frame img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.cull-compare .frame .lbl { position: absolute; left: 8px; top: 8px; }
+.cull-compare .meta { text-align: center; margin: 0; }
+
+/* Z on a video plays it */
+.cull-play { display: grid; place-items: center; cursor: default; }
+.cull-play .moments-player { width: calc(100% - 40px); height: calc(100% - 40px); }
+.cull-video-note { position: absolute; left: 50%; transform: translateX(-50%); bottom: 14px; display: inline-flex; align-items: center; gap: 8px; z-index: 1; }
+.cull-video-note .vid-badge { position: static; padding: 0; background: none; }
+
+/* Voice culling */
+.voice-pill { cursor: pointer; font: inherit; font-size: 12.5px; }
+.voice-pill .mic-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); display: inline-block; }
+.voice-pill.listening { background: var(--green); color: var(--on-green, #fff); }
+.voice-pill.listening .mic-dot { background: currentColor; animation: mic-pulse 1.4s ease-in-out infinite; }
+.voice-pill.starting .mic-dot, .voice-pill.paused .mic-dot { background: var(--amber, #c89b2c); }
+@keyframes mic-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.35; transform: scale(0.7); } }
+.voice-heard { position: fixed; left: 50%; top: 84px; transform: translateX(-50%); z-index: 30; background: var(--overlay); color: var(--overlay-ink); border-radius: 999px; padding: 8px 18px; font-size: 15px; letter-spacing: -0.01em; pointer-events: none; animation: voice-heard 1.1s ease-out forwards; }
+@keyframes voice-heard { 0% { opacity: 0; transform: translate(-50%, 6px); } 12% { opacity: 1; transform: translate(-50%, 0); } 75% { opacity: 1; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .voice-pill.listening .mic-dot, .voice-heard { animation: none; } }
+.voice-pill.blocked { background: var(--amber-soft, #f7ebcf); color: var(--amber, #9a6700); }
+.voice-pill.blocked .mic-dot { background: currentColor; }
+
+/* Compare as a duel: keeper so far vs the challenger */
+.cull-compare.duel .frame { cursor: zoom-in; }
+.cull-compare.duel .frame.zoomed { cursor: zoom-out; }
+.cull-compare.duel .frame.zoomed img { width: 100%; height: 100%; }
+.cull-compare .duel-key { position: absolute; right: 8px; bottom: 8px; font: 500 11px var(--mono); color: var(--overlay-ink); background: var(--overlay); border-radius: 999px; padding: 3px 9px; }

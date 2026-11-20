@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>CFBundleIdentifier</key>
+  <string>com.capturedbyandy.library.bin</string>
+  <key>CFBundleName</key>
+  <string>Captured by Andy clean up</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Clean up: finds the photos you chose to delete in Photos and deletes them there too, after you confirm. They stay in Recently Deleted for 30 days.</string>
+</dict>
+</plist>

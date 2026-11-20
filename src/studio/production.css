@@ -1,0 +1,98 @@
+/* Production: the project list and a project's six steps. */
+
+/* Step status colours: to do · with Andy · with Claude · done. */
+.sd { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--line); flex: none; }
+.sd.andy { background: var(--amber); }
+.sd.claude { background: #8fb4ff; }
+.sd.done { background: var(--green); }
+.step-dots { display: inline-flex; gap: 4px; align-items: center; flex: none; }
+.step-legend { display: inline-flex; gap: 12px; flex-wrap: wrap; }
+.step-legend span { display: inline-flex; gap: 5px; align-items: center; white-space: nowrap; }
+
+/* The list */
+.project-group { gap: 12px; }
+.project-pillar { margin: 0; font-family: var(--mono); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase; color: var(--muted); }
+.project-series { display: grid; gap: 4px; }
+.project-series h4 { margin: 4px 0 2px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.project-row {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto minmax(0, 190px) auto; gap: 12px; align-items: center;
+  border: 1px solid var(--line-soft); background: none; color: var(--ink); border-radius: 10px; padding: 9px 12px; text-align: left; min-width: 0;
+}
+.project-row:hover { border-color: var(--green); background: var(--soft-2); }
+.project-row .code { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.project-row .t { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.project-row .turn { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.project-row .turn.andy { color: var(--amber); }
+.project-row .turn.claude { color: #8fb4ff; }
+@media (max-width: 900px) {
+  .project-row { grid-template-columns: 44px minmax(0, 1fr) auto; }
+  .project-row .turn, .project-row .stage-chip { display: none; }
+}
+
+/* A project's page */
+.production-page { display: flex; flex-direction: column; gap: 14px; min-width: 0; max-width: 1180px; }
+.step-card { gap: 12px; }
+.step-card.andy { border-color: color-mix(in srgb, var(--amber) 45%, var(--line-soft)); }
+.step-card.claude { border-color: color-mix(in srgb, #8fb4ff 45%, var(--line-soft)); }
+.step-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; min-width: 0; }
+.step-title { display: flex; align-items: center; gap: 10px; border: 0; background: none; color: var(--ink); padding: 0; flex: 1 1 260px; min-width: 0; text-align: left; }
+.step-title .t { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; }
+.step-sum { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.step-n { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-family: var(--mono); font-size: 12px; flex: none; background: var(--soft-2); color: var(--ink-2); }
+.step-n.andy { background: var(--amber); color: #1b1407; }
+.step-n.claude { background: #8fb4ff; color: #0b1427; }
+.step-n.done { background: var(--green); color: var(--on-green); }
+.step-status button { font-size: 12px; padding: 5px 11px; }
+.step-status button.andy[aria-pressed="true"] { background: var(--amber); color: #1b1407; }
+.step-status button.claude[aria-pressed="true"] { background: #8fb4ff; color: #0b1427; }
+.step-status button.todo[aria-pressed="true"] { background: var(--soft-2); color: var(--ink); }
+/* Sections inside a step: one card, ruled sections. */
+.step-body > .card { border: 0; border-top: 1px solid var(--line-soft); border-radius: 0; padding: 12px 0 0; background: none; box-shadow: none; }
+.step-body > .card:first-child { border-top: 0; padding-top: 0; }
+
+/* Step 2 */
+.inspo-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 10px; }
+.inspo-link { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 10px; padding: 10px; border: 1px solid var(--line-soft); border-radius: 12px; min-width: 0; }
+.inspo-link .ph, .inspo-tile .ph { border-radius: 8px; overflow: hidden; background: var(--soft); display: grid; place-items: center; aspect-ratio: 9 / 16; max-height: 128px; }
+.inspo-link .ph img, .inspo-tile .ph img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.inspo-link .t { font-size: 13.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.inspo-pick { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; max-height: 60vh; overflow-y: auto; padding: 2px; }
+.inspo-tile { display: grid; gap: 4px; border: 1px solid var(--line-soft); background: none; color: var(--ink); border-radius: 10px; padding: 8px; text-align: left; min-width: 0; }
+.inspo-tile:hover:not(:disabled) { border-color: var(--green); }
+.inspo-tile:disabled { opacity: 0.45; }
+.inspo-tile .ph { aspect-ratio: 4 / 5; max-height: none; }
+.inspo-tile .t { font-size: 12.5px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.inspo-tile small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* Steps 3 and 4 */
+.sound-list, .footage-marks { display: grid; gap: 6px; }
+.sound-row { display: grid; grid-template-columns: 130px minmax(0, 1fr) minmax(0, 1.2fr) auto auto; gap: 8px; align-items: center; min-width: 0; }
+.footage-row { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.4fr); gap: 8px; align-items: center; min-width: 0; }
+.sound-row .file, .footage-row .file { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.lic { display: inline-flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--red); white-space: nowrap; }
+.lic.ok { color: var(--green); }
+.footage-row .lic { color: var(--muted); }
+.footage-row .lic.warn { color: var(--amber); }
+@media (max-width: 900px) {
+  .sound-row { grid-template-columns: 110px minmax(0, 1fr) auto; }
+  .sound-row input[type="text"], .sound-row .st-input:not(select) { grid-column: 1 / -1; }
+  .footage-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .footage-row .st-input { grid-column: 1 / -1; }
+}
+
+/* Step 5 */
+.cut-read { border: 1px solid var(--line-soft); border-radius: 12px; padding: 12px; gap: 8px; }
+.cut-change { font-size: 13px; overflow-wrap: anywhere; }
+.cut-change b { font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; margin-right: 6px; }
+.cut-change.added b { color: var(--green); }
+.cut-change.removed b { color: var(--red); }
+.cut-change.trimmed b, .cut-change.moved b { color: var(--amber); }
+.cut-clips { display: grid; gap: 2px; font-size: 12.5px; margin-top: 6px; max-height: 260px; overflow-y: auto; }
+.cut-clips > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* The list page: projects, and shoot days on the right. */
+.production-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 16px; align-items: start; }
+.production-layout > * { min-width: 0; }
+@media (max-width: 1100px) {
+  .production-layout { grid-template-columns: 1fr; }
+}

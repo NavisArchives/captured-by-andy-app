@@ -1,0 +1,89 @@
+/* Archive: the website's projects. */
+.archive-row { display: flex; align-items: center; gap: 12px; padding: 6px; border-radius: 12px; }
+.archive-row:hover { background: var(--soft); }
+.archive-open { flex: 1; min-width: 0; display: grid; grid-template-columns: 64px minmax(0, 1fr) minmax(0, 0.7fr) 90px; gap: 14px; align-items: center; border: 0; background: none; padding: 0; color: inherit; text-align: left; }
+.archive-cover { width: 64px; height: 48px; border-radius: 8px; overflow: hidden; display: block; }
+.archive-name { display: grid; gap: 3px; min-width: 0; }
+.archive-name strong { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.archive-open .meta { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.archive-words { padding: 16px; display: grid; gap: 12px; }
+.archive-frames { display: grid; gap: 12px; margin-bottom: 14px; }
+.archive-frame { margin: 0; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.archive-pic { position: relative; aspect-ratio: 4 / 3; border-radius: 10px; overflow: hidden; }
+.archive-frame.is-cover .archive-pic { outline: 2px solid var(--green); outline-offset: 2px; }
+.archive-badge { position: absolute; left: 8px; top: 8px; font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; background: var(--green); color: var(--on-green); border-radius: 999px; padding: 3px 8px; }
+.thumb img.site { opacity: 1; object-fit: cover; }
+.archive-frame textarea { resize: vertical; font-size: 12.5px; line-height: 1.45; }
+.archive-acts { display: flex; flex-wrap: wrap; gap: 4px; }
+.archive-fold { display: flex; align-items: center; gap: 12px; width: 100%; border: 0; background: none; color: inherit; padding: 0; text-align: left; cursor: pointer; }
+.archive-fold .h6 { margin: 0; flex: none; }
+.archive-sum { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.archive-chev { flex: none; opacity: 0.6; font-size: 12px; }
+/* Dragging: a row is one drop target. A green bar between frames shows where
+   a frame will join a row; a green line above or below a row shows a new row
+   (or where a dragged row goes). */
+.archive-band { position: relative; padding: 10px 0 10px 30px; border-radius: 12px; }
+.archive-band.dragging { opacity: 0.35; }
+.archive-band.line-above::before, .archive-band.line-below::after { content: ""; position: absolute; left: 30px; right: 0; height: 3px; border-radius: 3px; background: var(--green); }
+.archive-band.line-above::before { top: -2px; }
+.archive-band.line-below::after { bottom: -2px; }
+.archive-grip { position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 24px; height: 40px; display: grid; place-items: center; border: 0; border-radius: 8px; background: none; color: var(--ink); opacity: 0.25; cursor: grab; }
+.archive-band:hover .archive-grip { opacity: 0.8; }
+.archive-grip:active { cursor: grabbing; }
+.archive-board .archive-frames { margin-bottom: 0; }
+.archive-pic[draggable="true"] { cursor: grab; }
+.archive-pic[draggable="true"]:active { cursor: grabbing; }
+.archive-frame.dragging { opacity: 0.35; }
+.archive-frame.drop-before .archive-pic { box-shadow: -6px 0 0 var(--green); }
+.archive-frame.drop-after .archive-pic { box-shadow: 6px 0 0 var(--green); }
+.archive-badge.archive-film { left: auto; right: 8px; background: rgba(0, 0, 0, 0.6); color: #fff; }
+/* Connect to the library: the matches as small pictures. */
+.archive-connect { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; max-height: 60vh; overflow: auto; }
+.archive-connect button { display: grid; gap: 4px; padding: 0; border: 0; background: none; color: inherit; text-align: left; cursor: pointer; }
+.archive-connect .thumb { aspect-ratio: 4 / 3; border-radius: 8px; overflow: hidden; }
+.archive-connect button:hover .thumb { outline: 2px solid var(--green); outline-offset: 1px; }
+.archive-connect span { font-size: 12.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.archive-connect small { color: var(--muted); font-size: 11.5px; }
+.archive-make-cover { border: 0; cursor: pointer; opacity: 0; background: rgba(0, 0, 0, 0.55); color: #fff; transition: opacity 0.12s; }
+.archive-pic:hover .archive-make-cover { opacity: 1; }
+.archive-part { margin: 22px 0 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+@media (max-width: 760px) {
+  .archive-open { grid-template-columns: 56px minmax(0, 1fr); }
+  .archive-open > .meta { display: none; }
+  .archive-frames { grid-template-columns: 1fr !important; }
+}
+
+/* The site's pages (site.json). */
+.site-split { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(300px, 1fr); gap: 16px; align-items: start; }
+.site-wall { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.site-wall-tile { display: grid; gap: 6px; place-items: center; padding: 16px 8px 10px; border-radius: 12px; border: 1px solid var(--line-soft); background: #f4f2ee; color: #111; cursor: grab; }
+.site-wall-tile.on { outline: 2px solid var(--green); outline-offset: 2px; }
+.site-wall-tile.dragging { opacity: 0.35; }
+.site-wall-tile small { font-size: 11px; color: #777; }
+.site-logo { height: 26px; max-width: 100%; object-fit: contain; filter: brightness(0); }
+.site-logo-name { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; }
+.site-logo-box { min-width: 120px; padding: 12px; border-radius: 10px; background: #f4f2ee; color: #111; display: grid; place-items: center; }
+.site-films { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+.site-film { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; align-items: start; }
+.site-film > img, .site-film > .thumb { width: 96px; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; background: var(--soft); }
+.site-motion { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr auto auto; gap: 8px; align-items: center; }
+@media (max-width: 1100px) { .site-split { grid-template-columns: 1fr; } .site-motion { grid-template-columns: 1fr 1fr; } }
+
+/* A frame's tools, on the picture: always there, clearer on hover. */
+.archive-tools { position: absolute; left: 6px; right: 6px; bottom: 6px; display: flex; flex-wrap: wrap; gap: 4px; opacity: 0.85; transition: opacity 0.12s; }
+.archive-pic:hover .archive-tools { opacity: 1; }
+.archive-tools button { display: inline-flex; align-items: center; gap: 4px; border: 0; border-radius: 999px; padding: 4px 8px; font-size: 11.5px; background: rgba(0, 0, 0, 0.62); color: #fff; cursor: pointer; }
+.archive-tools button:hover { background: rgba(0, 0, 0, 0.85); }
+.archive-tools button.todo { background: var(--green); color: var(--on-green); }
+/* Small: icons only. */
+.archive-board.small .archive-tools { left: 3px; right: 3px; bottom: 3px; gap: 2px; }
+.archive-board.small .archive-tools button { padding: 3px 5px; font-size: 10.5px; }
+.archive-board.small .archive-tools b { display: none; }
+.archive-board.small .archive-badge { font-size: 8.5px; padding: 2px 5px; left: 4px; top: 4px; }
+.archive-badge.archive-waiting { left: 8px; top: 30px; background: #e5b75a; color: #1b1406; }
+.archive-board.small .archive-badge.archive-waiting { top: 20px; }
+.film-tint { align-items: center; }
+.film-tint input[type="color"] { width: 26px; height: 26px; padding: 0; border: 1px solid var(--line); border-radius: 7px; background: none; cursor: pointer; }
+.film-tint input[type="color"]::-webkit-color-swatch-wrapper { padding: 2px; }
+.film-tint input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 5px; }
+.proposal-tag { margin-left: 8px; vertical-align: 2px; font-size: 10px; }

@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "capturedbyandy",
+  "main": "src/worker/index.js",
+  // Newest date the installed runtime (workerd 1.20260921.1) supports.
+  "compatibility_date": "2026-09-21",
+  "r2_buckets": [{ "binding": "PHOTOS", "bucket_name": "REPLACE_ME" }],
+  // R2_ACCOUNT_ID and the R2_ACCESS_KEY_ID / R2_SECRET_ACCESS_KEY secrets are
+  // only needed for signed URLs; locally they go in .dev.vars (gitignored).
+  "vars": { "R2_BUCKET_NAME": "REPLACE_ME" },
+  "observability": { "enabled": true, "traces": { "enabled": true } }
+}

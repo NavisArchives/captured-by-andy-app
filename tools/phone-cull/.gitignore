@@ -1,0 +1,5 @@
+passcode.txt
+__pycache__/
+sync-token.txt
+worker/.wrangler/
+sync-state.json

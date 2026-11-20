@@ -1,0 +1,33 @@
+{
+  "name": "captured-by-andy",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "tauri": "tauri",
+    "build:web": "tsc -p tsconfig.web.json && vite build -c vite.web.config.ts",
+    "dev:web": "vite -c vite.web.config.ts"
+  },
+  "dependencies": {
+    "@fontsource/ibm-plex-mono": "^5.3.0",
+    "@fontsource/instrument-sans": "^5.3.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "@tanstack/react-virtual": "^3.14.13",
+    "@tauri-apps/api": "^2",
+    "@tauri-apps/plugin-dialog": "^2.7.3",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "thumbhash": "^0.1.1"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2",
+    "@types/react": "^19.1.8",
+    "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  }
+}

@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0c0b0a">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Cull</title>
+<style>
+:root {
+  color-scheme: dark;
+  --bg: #0c0b0a; --panel: #1a1815; --line: #2c2924; --fg: #f1ece3; --muted: #a59b8c;
+  --keep: #8fc58f; --nope: #e07a6e; --maybe: #e3b55b; --gold: #d3a557;
+}
+/* An app, not a page: no zoom, no bounce, no selection or long-press menus. */
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; -webkit-touch-callout: none; touch-action: manipulation; }
+html, body { position: fixed; inset: 0; overflow: hidden; -webkit-text-size-adjust: 100%; }
+input { -webkit-user-select: text; user-select: text; font-size: 16px; }
+html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.4 -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif; overscroll-behavior: none; }
+body { padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom); display: flex; flex-direction: column; -webkit-user-select: none; user-select: none; }
+button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+[hidden] { display: none !important; }
+
+/* top bar */
+.top { display: flex; align-items: center; gap: 10px; padding: 10px 16px 8px; }
+.top select { flex: 1; min-width: 0; appearance: none; background: var(--panel); color: var(--fg); border: 1px solid var(--line); border-radius: 999px; padding: 8px 14px; font: inherit; font-weight: 600; }
+.count { font: 12px ui-monospace, Menlo, monospace; color: var(--muted); white-space: nowrap; }
+.bar { height: 2px; background: var(--line); margin: 0 16px; border-radius: 2px; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--gold); width: 0; transition: width 0.3s; }
+
+/* the card stack */
+.stage { position: relative; flex: 1; min-height: 0; margin: 12px 12px 0; }
+.card { position: absolute; inset: 0; border-radius: 18px; overflow: hidden; background: #000 center / contain no-repeat; touch-action: none; will-change: transform; }
+.card.next { transform: scale(0.96); opacity: 0.6; }
+.card.fly { transition: transform 0.28s ease-out, opacity 0.28s; }
+.card.back { transition: transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2); }
+.stamp { position: absolute; top: 22px; padding: 6px 12px; border: 3px solid; border-radius: 10px; font: 800 26px/1 -apple-system, sans-serif; letter-spacing: 0.06em; opacity: 0; transform: rotate(-12deg); pointer-events: none; }
+.stamp.keep { left: 18px; color: var(--keep); border-color: var(--keep); }
+.stamp.nope { right: 18px; color: var(--nope); border-color: var(--nope); transform: rotate(12deg); }
+.stamp.maybe { left: 50%; top: auto; bottom: 26px; transform: translateX(-50%); color: var(--maybe); border-color: var(--maybe); }
+.meta { position: absolute; left: 0; right: 0; bottom: 0; padding: 40px 16px 12px; background: linear-gradient(transparent, rgba(0,0,0,0.65)); font: 12px ui-monospace, Menlo, monospace; color: #e8e2d8; pointer-events: none; }
+.loading { position: absolute; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 13px; }
+
+/* buttons */
+.actions { display: flex; justify-content: center; align-items: center; gap: 18px; padding: 14px 16px 16px; }
+.btn { width: 62px; height: 62px; border-radius: 50%; display: grid; place-items: center; background: var(--panel); border: 1px solid var(--line); }
+.btn svg { width: 28px; height: 28px; }
+.btn.small { width: 48px; height: 48px; }
+.btn.small svg { width: 20px; height: 20px; }
+.btn.nope { color: var(--nope); } .btn.keep { color: var(--keep); } .btn.maybe { color: var(--maybe); } .btn.undo { color: var(--muted); }
+.btn:active { transform: scale(0.92); }
+.hint { text-align: center; font-size: 12px; color: var(--muted); padding: 0 16px 6px; }
+
+/* login + done */
+.panel { margin: auto 24px; display: grid; gap: 14px; text-align: center; }
+.panel h1 { font: 600 28px/1.1 -apple-system, sans-serif; margin: 0; }
+.panel p { margin: 0; color: var(--muted); }
+.panel input { font: 600 28px ui-monospace, Menlo, monospace; letter-spacing: 0.3em; text-align: center; padding: 12px; border-radius: 14px; border: 1px solid var(--line); background: var(--panel); color: var(--fg); }
+.panel .go { padding: 14px; border-radius: 14px; background: var(--gold); color: #17140c; font-weight: 700; }
+.err { color: var(--nope); min-height: 1.2em; }
+</style>
+</head>
+<body>
+
+<div class="panel" id="login" hidden>
+  <h1>Cull</h1>
+  <p>Enter the passcode from your Mac.</p>
+  <input id="code" inputmode="numeric" autocomplete="one-time-code" maxlength="6" aria-label="Passcode">
+  <button class="go" id="enter" type="button">Start</button>
+  <p class="err" id="err"></p>
+</div>
+
+<div id="app" hidden style="display:contents">
+  <div class="top">
+    <select id="folder" aria-label="Folder to cull"></select>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="bar"><i id="bar"></i></div>
+  <div class="stage" id="stage"><div class="loading" id="loading">Loading…</div></div>
+  <div class="actions">
+    <button class="btn small undo" id="undo" type="button" aria-label="Undo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 010 12h-3"/></svg></button>
+    <button class="btn nope" id="nope" type="button" aria-label="Reject"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+    <button class="btn small maybe" id="maybe" type="button" aria-label="Maybe"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M9 9a3 3 0 115 2.2c-1 .7-2 1.3-2 2.8"/><circle cx="12" cy="18" r="0.6" fill="currentColor"/></svg></button>
+    <button class="btn keep" id="keep" type="button" aria-label="Keep"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-9.5-9.2C1.2 8.6 3.3 5 6.8 5c2 0 3.5 1.1 4.2 2.3h2C13.7 6.1 15.2 5 17.2 5c3.5 0 5.6 3.6 4.3 6.8C19.5 16.4 12 21 12 21z"/></svg></button>
+  </div>
+  <div class="hint">Swipe right to keep · left to reject · up for maybe</div>
+</div>
+
+<div class="panel" id="done" hidden>
+  <h1>All done</h1>
+  <p id="doneText">Nothing left to cull in this folder.</p>
+  <button class="go" id="other" type="button">Pick another folder</button>
+</div>
+
+<script>
+// Safari ignores user-scalable=no for pinch and double-tap: stop both by hand.
+for (const ev of ["gesturestart", "gesturechange", "gestureend"]) document.addEventListener(ev, (e) => e.preventDefault(), { passive: false });
+document.addEventListener("dblclick", (e) => e.preventDefault(), { passive: false });
+// Double-tap zoom is off through touch-action: manipulation (fast repeated taps on the buttons still count).
+document.addEventListener("touchmove", (e) => { if (e.touches.length > 1) e.preventDefault(); }, { passive: false });
+const $ = (id) => document.getElementById(id);
+let queue = [], pos = 0, done = 0, total = 0, history = [], folder = "";
+
+async function api(path, body) {
+  const r = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : {});
+  if (r.status === 401) { show("login"); throw new Error("passcode"); }
+  return r.json();
+}
+function show(which) {
+  for (const id of ["login", "app", "done"]) $(id).hidden = id !== which;
+  $("app").style.display = which === "app" ? "contents" : "none";
+}
+
+$("enter").onclick = async () => {
+  const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ code: $("code").value }) });
+  if (r.ok) { $("err").textContent = ""; start(); } else { $("err").textContent = "That passcode didn't work."; }
+};
+$("code").addEventListener("keydown", (e) => e.key === "Enter" && $("enter").click());
+
+async function start() {
+  let list;
+  try { list = await api("/api/folders"); } catch { return; }
+  show("app");
+  const sel = $("folder");
+  sel.innerHTML = list.map((f) => `<option value="${encodeURIComponent(f.dir)}">${f.label} · ${f.count}</option>`).join("") || `<option value="">Nothing to cull</option>`;
+  let saved = ""; try { saved = localStorage.getItem("cullFolder") || ""; } catch {}
+  const pick = list.find((f) => f.dir === saved) || list[0];
+  if (!pick) return show("done");
+  sel.value = encodeURIComponent(pick.dir);
+  load(pick.dir);
+}
+$("folder").onchange = (e) => load(decodeURIComponent(e.target.value));
+$("other").onclick = () => start();
+
+async function load(dir) {
+  folder = dir; try { localStorage.setItem("cullFolder", dir); } catch {}
+  const q = await api("/api/queue?dir=" + encodeURIComponent(dir));
+  queue = q.photos; pos = 0; done = q.done; total = q.done + q.photos.length; history = [];
+  render();
+}
+
+// Two sizes: a tiny one (~25 KB) that shows at once, the sharp one drawn over it.
+const img = (p) => `/img/${p.id}`;
+const tiny = (p) => `/img/${p.id}?s=small`;
+const preload = new Map();
+function fetchOnce(url) {
+  if (!preload.has(url)) { const im = new Image(); im.decoding = "async"; im.src = url; preload.set(url, im); }
+  if (preload.size > 200) for (const k of [...preload.keys()].slice(0, preload.size - 200)) preload.delete(k);
+  return preload.get(url);
+}
+// Aggressive: the sharp copies of the next 25 photos download at once (in parallel over
+// HTTP/2) and are decoded ahead, so a fast swiper never lands on a blurry one; tiny
+// copies of the next 40 cover the rare miss.
+const SHARP_AHEAD = 25, TINY_AHEAD = 40;
+function warm() {
+  if (!queue[pos]) return;
+  for (let i = pos; i < Math.min(queue.length, pos + SHARP_AHEAD); i++) {
+    const im = fetchOnce(img(queue[i]));
+    if (!im._decoding && im.decode) { im._decoding = true; im.decode().catch(() => {}); }
+  }
+  for (let i = pos; i < Math.min(queue.length, pos + TINY_AHEAD); i++) fetchOnce(tiny(queue[i]));
+}
+
+function render() {
+  const stage = $("stage");
+  stage.innerHTML = "";
+  $("count").textContent = `${(done).toLocaleString()} / ${total.toLocaleString()}`;
+  $("bar").style.width = total ? `${(done / total) * 100}%` : "0";
+  if (pos >= queue.length) { $("doneText").textContent = `You went through every photo here (${done.toLocaleString()} marked).`; return show("done"); }
+  // the next card underneath, then the current one on top
+  if (queue[pos + 1]) stage.appendChild(card(queue[pos + 1], true));
+  stage.appendChild(card(queue[pos], false));
+  warm();
+}
+
+function card(p, isNext) {
+  const el = document.createElement("div");
+  el.className = "card" + (isNext ? " next" : "");
+  // the sharp copy on top of the tiny one: the tiny one shows while the sharp one arrives
+  const ready = preload.get(img(p));
+  el.style.backgroundImage = ready && ready.complete && ready.naturalWidth ? `url("${img(p)}")` : isNext ? `url("${tiny(p)}")` : `url("${img(p)}"), url("${tiny(p)}")`;
+  if (!isNext) {
+    const when = p.at ? new Date(p.at).toLocaleString([], { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "";
+    el.innerHTML = `<span class="stamp keep">KEEP</span><span class="stamp nope">NOPE</span><span class="stamp maybe">MAYBE</span><div class="meta">${p.name} · ${when}</div>`;
+    drag(el);
+  }
+  return el;
+}
+
+// Swipe: follow the finger, show the stamp, decide on release by distance or speed.
+function drag(el) {
+  let x0 = 0, y0 = 0, dx = 0, dy = 0, t0 = 0, down = false;
+  const W = () => el.clientWidth;
+  el.addEventListener("pointerdown", (e) => { down = true; x0 = e.clientX; y0 = e.clientY; t0 = performance.now(); el.setPointerCapture(e.pointerId); el.classList.remove("back"); });
+  el.addEventListener("pointermove", (e) => {
+    if (!down) return;
+    dx = e.clientX - x0; dy = e.clientY - y0;
+    el.style.transform = `translate(${dx}px, ${dy}px) rotate(${dx / 18}deg)`;
+    const up = -dy > Math.abs(dx);
+    el.querySelector(".keep").style.opacity = !up ? Math.max(0, dx / 120) : 0;
+    el.querySelector(".nope").style.opacity = !up ? Math.max(0, -dx / 120) : 0;
+    el.querySelector(".maybe").style.opacity = up ? Math.max(0, -dy / 120) : 0;
+  });
+  const end = () => {
+    if (!down) return; down = false;
+    const dt = Math.max(1, performance.now() - t0), vx = dx / dt, vy = dy / dt;
+    if (-dy > W() * 0.28 || (vy < -0.6 && -dy > 40 && -dy > Math.abs(dx))) return decide("maybe", el);
+    if (dx > W() * 0.28 || (vx > 0.6 && dx > 40)) return decide("selected", el);
+    if (dx < -W() * 0.28 || (vx < -0.6 && dx < -40)) return decide("rejected", el);
+    el.classList.add("back"); el.style.transform = ""; el.querySelectorAll(".stamp").forEach((s) => (s.style.opacity = 0));
+    dx = dy = 0;
+  };
+  el.addEventListener("pointerup", end); el.addEventListener("pointercancel", end);
+}
+
+let busy = false;
+async function decide(state, el) {
+  if (busy || pos >= queue.length) return;
+  busy = true;
+  const p = queue[pos];
+  el = el || $("stage").lastElementChild;
+  if (el) {
+    el.classList.add("fly");
+    const W = window.innerWidth;
+    el.style.transform = state === "maybe" ? "translate(0, -120vh)" : `translate(${state === "selected" ? W * 1.4 : -W * 1.4}px, 40px) rotate(${state === "selected" ? 24 : -24}deg)`;
+    el.style.opacity = "0";
+  }
+  try {
+    const r = await api("/api/mark", { id: p.id, state });
+    history.push({ id: p.id, previous: r.previous || "unreviewed" });
+    pos++; done++;
+  } catch (e) { /* stay on this photo */ }
+  setTimeout(() => { busy = false; render(); }, 200);
+}
+$("keep").onclick = () => decide("selected");
+$("nope").onclick = () => decide("rejected");
+$("maybe").onclick = () => decide("maybe");
+$("undo").onclick = async () => {
+  const last = history.pop();
+  if (!last) return;
+  await api("/api/mark", { id: last.id, state: last.previous });
+  pos = Math.max(0, pos - 1); done = Math.max(0, done - 1);
+  render();
+};
+
+start();
+</script>
+</body>
+</html>

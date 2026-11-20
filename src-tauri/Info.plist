@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>NSMicrophoneUsageDescription</key>
+  <string>Voice culling: say yes, no or maybe to mark photos. Heard on this Mac only, never recorded.</string>
+  <key>NSSpeechRecognitionUsageDescription</key>
+  <string>Voice culling: say yes, no or maybe to mark photos. Recognised on this Mac only.</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>Clean up: finds the photos you chose to delete in Photos and deletes them there too, after you confirm. They stay in Recently Deleted for 30 days.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>Save to Studio</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>capturedbyandy</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>

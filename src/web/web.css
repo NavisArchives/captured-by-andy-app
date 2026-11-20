@@ -1,0 +1,15 @@
+/* The web app's own bits: the sign-in and loading card, and the outbox note. */
+.web-gate { min-height: 100dvh; display: grid; place-items: center; padding: 24px 16px; background: var(--ground); color: var(--ink); }
+.web-gate-card { width: min(420px, 100%); display: grid; gap: 14px; padding: 28px 24px; border: 1px solid var(--line-soft); border-radius: var(--r); background: var(--card); box-shadow: var(--shadow); }
+.web-gate-card p { margin: 0; color: var(--ink-2); line-height: 1.45; }
+.web-gate-card .web-note { font-size: 13px; color: var(--muted); }
+.web-gate-card button { justify-self: start; }
+.web-mark { font-family: var(--mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+.web-problem { color: var(--red) !important; overflow-wrap: anywhere; }
+.web-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.web-bar { height: 4px; border-radius: 4px; background: var(--soft); overflow: hidden; }
+.web-bar span { display: block; height: 100%; background: var(--green); transition: width 0.3s; }
+.web-pending {
+  position: fixed; left: 50%; bottom: calc(12px + env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 90;
+  padding: 6px 12px; border-radius: 99px; background: var(--amber-soft); color: var(--amber); font-size: 12.5px; display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 24px); width: max-content; overflow-wrap: anywhere;
+}
